@@ -29,13 +29,13 @@ const PROTOCOL = "0221"; // bzfs protocol version
 
 interface IGameOptions{
   flags: boolean;
-	jumping: boolean;
-	inertia: boolean;
-	ricochet: boolean;
-	shaking: boolean;
-	antidote: boolean;
-	handicap: boolean;
-	noTeamKills: boolean;
+  jumping: boolean;
+  inertia: boolean;
+  ricochet: boolean;
+  shaking: boolean;
+  antidote: boolean;
+  handicap: boolean;
+  noTeamKills: boolean;
 }
 
 // must match GameType order at https://github.com/BZFlag-Dev/bzflag/blob/2.4/include/global.h#L89-L95
@@ -45,14 +45,14 @@ const teamNames = ["Rogue", "Red", "Green", "Blue", "Purple", "Observer", "Rabbi
 
 // must match GameOptions at https://github.com/BZFlag-Dev/bzflag/blob/2.4/include/global.h#L97-L108
 const gameOptions = {
-	flags: 0x0002,
-	jumping: 0x0008,
-	inertia: 0x0010,
-	ricochet: 0x0020,
-	shaking: 0x0040,
-	antidote: 0x0080,
-	handicap: 0x0100,
-	noTeamKills: 0x0400
+  flags: 0x0002,
+  jumping: 0x0008,
+  inertia: 0x0010,
+  ricochet: 0x0020,
+  shaking: 0x0040,
+  antidote: 0x0080,
+  handicap: 0x0100,
+  noTeamKills: 0x0400
 };
 
 // must match https://github.com/BZFlag-Dev/bzflag/blob/2.4/include/Protocol.h
