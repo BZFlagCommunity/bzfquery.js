@@ -78,7 +78,7 @@ const decodeOptions = (options: number): IGameOptions | null => {
   return _gameOptions;
 };
 
-const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<Object> => {
+const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<any> => {
   let conn;
   try{
     conn = await Deno.connect({
