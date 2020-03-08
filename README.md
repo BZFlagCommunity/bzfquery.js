@@ -5,8 +5,8 @@ JavaScript version of bzfquery. Requires [Deno](https://deno.land) to run. It ca
 Usage: `deno --allow-net bzfquery.ts host:port`
 
 Use in your code
-```javascript
-import bzfquery from "./bzfquery.ts";
+```typescript
+import bzfquery from "https://raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts";
 
-bzfquery(host, port).then((data) => console.log(JSON.stringify(data, null, 2)));
+bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
 ```
