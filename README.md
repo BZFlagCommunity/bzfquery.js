@@ -11,9 +11,9 @@ import bzfquery from "https://raw.githubusercontent.com/The-Noah/bzfquery.js/mas
 bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
 ```
 
-# Types
+Use without downloading: `deno --allow-net https://raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts host:port`
 
-## Simple Types
+# Types
 
 | Name       | Type |
 | ---------- | ---- |
@@ -31,8 +31,8 @@ bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null
 | `maxTeamScore`   | `number` |
 | `maxPlayers`     | `number` |
 | `maxShots`       | `number` |
-| `timeLimit`      | `number` |
-| `elapsedTime`    | `number` |
+| `timeLimit`      | `number` | Measured in deciseconds |
+| `elapsedTime`    | `number` | Measured in deciseconds |
 | `shake`          | `false | {wins: number, timeout: number}` | `timeout` is in deciseconds |
 
 ## IGameOptions
