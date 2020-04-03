@@ -1,6 +1,6 @@
 # bzfquery.js
 
-JavaScript version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library.
+JavaScript (TypeScript) version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library.
 
 Usage: `deno --allow-net bzfquery.ts host:port`
 
@@ -10,3 +10,61 @@ import bzfquery from "https://raw.githubusercontent.com/The-Noah/bzfquery.js/mas
 
 bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
 ```
+
+# Types
+
+## Simple Types
+
+| Name       | Type |
+| ---------- | ---- |
+| `TeamName` | `"Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter"` |
+
+## IBZFQuery
+
+| Property         | Type | Extra Info |
+| ---------------- | ---- | ---------- |
+| `style`          | `"FFA" | "CTF" | "OFFA" | "Rabbit"` |
+| `options`        | `IGameOptions` |
+| `teams`          | `ITeam[]` |
+| `players`        | `IPlayer[]` |
+| `maxPlayerScore` | `number` |
+| `maxTeamScore`   | `number` |
+| `maxPlayers`     | `number` |
+| `maxShots`       | `number` |
+| `timeLimit`      | `number` |
+| `elapsedTime`    | `number` |
+| `shake`          | `false | {wins: number, timeout: number}` | `timeout` is in deciseconds |
+
+## IGameOptions
+
+| Property       | Type      |
+| -------------- | --------- |
+| `flags`        | `boolean` |
+| `jumping`      | `boolean` |
+| `inertia`      | `boolean` |
+| `ricochet`     | `boolean` |
+| `shaking`      | `boolean` |
+| `antidote`     | `boolean` |
+| `handicap`     | `boolean` |
+| `noTeamKiils`  | `boolean` |
+
+## ITeam
+
+| Property     | Type       | Extra Info |
+| ------------ | ---------- | ---------- |
+| `name`       | `TeamName` |
+| `players`    | `number`   |
+| `maxPlayers` | `number`   |
+| `wins`       | `number`   | (Optional) does not exist on `Observer` team |
+| `losses`     | `TeamName` | (Optional) does not exist on `Observer` team |
+
+## IPlayer
+
+| Property   | Type       | Extra Info |
+| ---------- | ---------- | ---------- |
+| `team`     | `TeamName` |
+| `wins`     | `number`   |
+| `losses`   | `number`   |
+| `tks`      | `number`   |
+| `callsign` | `string`   |
+| `motto`    | `string`   | May be an empty `string` |

@@ -27,6 +27,23 @@ import jspack from "./jspack.ts";
 
 const PROTOCOL = "0221"; // bzfs protocol version
 
+type GameStyle = "FFA" | "CTF" | "OFFA" | "Rabbit";
+type TeamName = "Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter";
+
+interface IBZFQuery{
+  style: GameStyle;
+  options: IGameOptions;
+  teams: ITeam[];
+  players: IPlayer[];
+  maxPlayerScore: number;
+  maxTeamScore: number;
+  maxPlayers: number;
+  maxShots: number;
+  timeLimit: number;
+  elapsedTime: number;
+  shake: false | {wins: number, timeout: number};
+}
+
 interface IGameOptions{
   flags: boolean;
   jumping: boolean;
@@ -36,6 +53,23 @@ interface IGameOptions{
   antidote: boolean;
   handicap: boolean;
   noTeamKills: boolean;
+}
+
+interface ITeam{
+  name: TeamName;
+  players: number;
+  maxPlayers: number;
+  wins?: number;
+  losses?: number;
+}
+
+interface IPlayer{
+  team: TeamName;
+  wins: number;
+  losses: number;
+  tks: number;
+  callsign: string;
+  motto: string;
 }
 
 // must match GameType order at https://github.com/BZFlag-Dev/bzflag/blob/2.4/include/global.h#L89-L95
@@ -78,7 +112,7 @@ const decodeOptions = (options: number): IGameOptions | null => {
   return _gameOptions;
 };
 
-const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<any> => {
+const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery> => {
   let conn;
   try{
     conn = await Deno.connect({
@@ -166,7 +200,7 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
   buffer = buffer.slice(1);
 
   const teamMaxSizes = [rogueMax, redMax, greenMax, blueMax, purpleMax];
-  const teams = {};
+  const teams: ITeam[] = [];
   for(let i = 0; i < numTeams; i++){
     const teamInfo = buffer.slice(0, 8);
     buffer = buffer.slice(8);
@@ -176,21 +210,21 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
       continue;
     }
 
-    teams[teamNames[team].toLowerCase()] = {players: size, maxPlayers: teamMaxSizes[team], wins, losses};
+    teams.push({name: teamNames[team] as TeamName, players: size, maxPlayers: teamMaxSizes[team], wins, losses});
   }
-  teams["observer"] = {players: observerSize, maxPlayers: observerMax};
+  teams.push({name: "Observer", players: observerSize, maxPlayers: observerMax});
 
-  const players = [];
+  const players: IPlayer[] = [];
   for(let i = 0; i < numPlayers; i++){
     buffer = await getResponse(messages.addPlayer);
     const [id, type, team, wins, losses, tks, callsign, motto] = jspack.Unpack(">b5H32s128s", buffer);
-    players.push({name: teamNames[team], wins, losses, tks, callsign: callsign.replace(/\x00/g, ""), motto: motto.replace(/\x00/g, "")});
+    players.push({team: teamNames[team] as TeamName, wins, losses, tks, callsign: callsign.replace(/\x00/g, ""), motto: motto.replace(/\x00/g, "")});
   }
 
-  const gameStyle = gameStyles[style];
+  const gameStyle = gameStyles[style] as GameStyle;
   const gameOptions = decodeOptions(options);
 
-  const info: any = {
+  const info: IBZFQuery = {
     style: gameStyle,
     options: gameOptions,
     teams,
@@ -199,17 +233,16 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
     maxTeamScore: maxTeamScore,
     maxPlayers: maxPlayers,
     maxShots: maxShots,
-    timeLimit: maxTime / 10,
-    elapsedTime: elapsedTime / 10
+    timeLimit: maxTime,
+    elapsedTime: elapsedTime,
+    shake: false
   };
 
   if(gameOptions.shaking){
     info.shake = {
       wins: shakeWins,
-      timeout: shakeTimeout / 10
+      timeout: shakeTimeout
     };
-  }else{
-    info.shake = false;
   }
 
   conn.close();
