@@ -17,13 +17,13 @@ Use without downloading: `deno --allow-net https://raw.githubusercontent.com/The
 
 | Name       | Type |
 | ---------- | ---- |
-| `TeamName` | `"Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter"` |
+| `TeamName` | `"Rogue" \| "Red" \| "Green" \| "Blue" \| "Purple" \| "Observer" \| "Rabbit" \| "Hunter"` |
 
 ## IBZFQuery
 
 | Property         | Type | Extra Info |
 | ---------------- | ---- | ---------- |
-| `style`          | `"FFA" | "CTF" | "OFFA" | "Rabbit"` |
+| `style`          | `"FFA" \| "CTF" \| "OFFA" \| "Rabbit"` |
 | `options`        | `IGameOptions` |
 | `teams`          | `ITeam[]` |
 | `players`        | `IPlayer[]` |
@@ -33,7 +33,7 @@ Use without downloading: `deno --allow-net https://raw.githubusercontent.com/The
 | `maxShots`       | `number` |
 | `timeLimit`      | `number` | Measured in deciseconds |
 | `elapsedTime`    | `number` | Measured in deciseconds |
-| `shake`          | `false | {wins: number, timeout: number}` | `timeout` is in deciseconds |
+| `shake`          | `false \| {wins: number, timeout: number}` | `timeout` is in deciseconds |
 
 ## IGameOptions
 
