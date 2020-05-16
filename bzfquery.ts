@@ -45,6 +45,7 @@ interface IBZFQuery{
 }
 
 interface IGameOptions{
+  [key: string]: boolean;
   flags: boolean;
   jumping: boolean;
   inertia: boolean;
@@ -78,7 +79,7 @@ const gameStyles = ["FFA", "CTF", "OFFA", "Rabbit"];
 const teamNames = ["Rogue", "Red", "Green", "Blue", "Purple", "Observer", "Rabbit", "Hunter"];
 
 // must match GameOptions at https://github.com/BZFlag-Dev/bzflag/blob/2.4/include/global.h#L97-L108
-const gameOptions = {
+const gameOptions: {[key: string]: number} = {
   flags: 0x0002,
   jumping: 0x0008,
   inertia: 0x0010,
@@ -97,13 +98,13 @@ const messages = {
   addPlayer: 0x6170
 };
 
-const decodeOptions = (options: number): IGameOptions | null => {
+const decodeOptions = (options: number): IGameOptions => {
   const _gameOptions = {} as IGameOptions;
 
   for(const option in gameOptions) {
     if(!gameOptions.hasOwnProperty(option)){
       console.error("game options decoding failed! this should not happen");
-      return null;
+      return {} as IGameOptions;
     }
 
     _gameOptions[option] = (options & gameOptions[option]) > 0;
@@ -112,8 +113,8 @@ const decodeOptions = (options: number): IGameOptions | null => {
   return _gameOptions;
 };
 
-const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery> => {
-  let conn;
+const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined> => {
+  let conn: Deno.Conn;
   try{
     conn = await Deno.connect({
       hostname: host,
@@ -121,7 +122,7 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
     });
   }catch(err){
     console.error(`unable to connect to ${host}:${port}:`, err);
-    return null;
+    return;
   }
 
   let buffer = new Uint8Array(1024);
@@ -134,10 +135,10 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
 
   if(magic.substr(0, 4) !== "BZFS"){
     console.error("not a bzflag server");
-    return null;
+    return;
   }else if(magic.substr(4, 4) !== PROTOCOL){
     console.error("incompatible version");
-    return null;
+    return;
   }
 
   const getPacket = async (): Promise<{code: string, buffer: Uint8Array}> => {
@@ -165,7 +166,12 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
   };
 
   const cmd = async (command: number): Promise<Uint8Array> => {
-    await conn.write(new Uint8Array(jspack.Pack(">2H", [0, command])));
+    const data = jspack.Pack(">2H", [0, command]);
+    if(!data){
+      return new Uint8Array();
+    }
+
+    await conn.write(new Uint8Array(data));
     const buffer = await getResponse(command);
     return buffer;
   };
@@ -250,7 +256,7 @@ const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promis
   return info;
 };
 
-if(Deno.args.length === 1){
+if(import.meta.main && Deno.args.length === 1){
   const host = Deno.args[0].split(":")[0];
   const port = parseInt(Deno.args[0].split(":")[1]) || undefined;
 
