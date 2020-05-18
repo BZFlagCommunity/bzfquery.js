@@ -2,7 +2,7 @@
 
 JavaScript (TypeScript) version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library.
 
-Usage: `deno --allow-net bzfquery.ts host:port`
+Usage: `deno run --allow-net bzfquery.ts host:port`
 
 Use in your code
 ```typescript
@@ -11,7 +11,7 @@ import bzfquery from "https://raw.githubusercontent.com/The-Noah/bzfquery.js/mas
 bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
 ```
 
-Use without downloading: `deno --allow-net https://raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts host:port`
+Use without downloading: `deno run --allow-net https://raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts host:port`
 
 # Types
 
