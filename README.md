@@ -6,12 +6,12 @@ Usage: `deno run --allow-net bzfquery.ts host:port`
 
 Use in your code
 ```typescript
-import bzfquery from "https://raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts";
+import bzfquery from "https://deno.land/x/bzfquery.js/bzfquery.ts";
 
 bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
 ```
 
-Use without downloading: `deno run --allow-net https://raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts host:port`
+Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery.js/bzfquery.ts host:port`
 
 # Types
 
