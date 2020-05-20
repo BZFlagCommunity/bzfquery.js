@@ -17,13 +17,13 @@ Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery.js/b
 
 | Name       | Type |
 | ---------- | ---- |
-| `TeamName` | `"Rogue" \| "Red" \| "Green" \| "Blue" \| "Purple" \| "Observer" \| "Rabbit" \| "Hunter"` |
+| `TeamName` | `"Rogue"` or `"Red"` or `"Green"` or `"Blue"` or `"Purple"` or `"Observer"` or `"Rabbit"` or `"Hunter"` |
 
 ## IBZFQuery
 
 | Property         | Type | Extra Info |
 | ---------------- | ---- | ---------- |
-| `style`          | `"FFA" \| "CTF" \| "OFFA" \| "Rabbit"` |
+| `style`          | `"FFA"` or `"CTF"` or `"OFFA"` or `"Rabbit"` |
 | `options`        | `IGameOptions` |
 | `teams`          | `ITeam[]` |
 | `players`        | `IPlayer[]` |
@@ -33,7 +33,7 @@ Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery.js/b
 | `maxShots`       | `number` |
 | `timeLimit`      | `number` | Measured in deciseconds |
 | `elapsedTime`    | `number` | Measured in deciseconds |
-| `shake`          | `false \| {wins: number, timeout: number}` | `timeout` is in deciseconds |
+| `shake`          | `false` or `{wins: number, timeout: number}` | `timeout` is in deciseconds |
 
 ## IGameOptions
 
