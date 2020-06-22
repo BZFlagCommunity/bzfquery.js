@@ -27,10 +27,10 @@ import jspack from "./jspack.ts";
 
 const PROTOCOL = "0221"; // bzfs protocol version
 
-type GameStyle = "FFA" | "CTF" | "OFFA" | "Rabbit";
-type TeamName = "Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter";
+export type GameStyle = "FFA" | "CTF" | "OFFA" | "Rabbit";
+export type TeamName = "Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter";
 
-interface IBZFQuery{
+export interface IBZFQuery{
   style: GameStyle;
   options: IGameOptions;
   teams: ITeam[];
@@ -44,7 +44,7 @@ interface IBZFQuery{
   shake: false | {wins: number, timeout: number};
 }
 
-interface IGameOptions{
+export interface IGameOptions{
   [key: string]: boolean;
   flags: boolean;
   jumping: boolean;
@@ -56,7 +56,7 @@ interface IGameOptions{
   noTeamKills: boolean;
 }
 
-interface ITeam{
+export interface ITeam{
   name: TeamName;
   players: number;
   maxPlayers: number;
@@ -64,7 +64,7 @@ interface ITeam{
   losses?: number;
 }
 
-interface IPlayer{
+export interface IPlayer{
   team: TeamName;
   wins: number;
   losses: number;
@@ -113,7 +113,15 @@ const decodeOptions = (options: number): IGameOptions => {
   return _gameOptions;
 };
 
-const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined> => {
+/**
+ * Query the given game server
+ * @param host Server hostname/ip
+ * @param port Server port
+ * Example:
+ * 
+ *     const query = bzfquery("127.0.0.1", 5156);
+ */
+export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined> => {
   let conn: Deno.Conn;
   try{
     conn = await Deno.connect({
