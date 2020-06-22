@@ -13,6 +13,8 @@ bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null
 
 Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery.js/bzfquery.ts host:port`
 
+More documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery.js/bzfquery.ts).
+
 # Types
 
 | Name       | Type |
