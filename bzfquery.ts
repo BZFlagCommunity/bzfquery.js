@@ -381,11 +381,28 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
   return info;
 };
 
-if(import.meta.main && Deno.args.length === 1){
-  const host = Deno.args[0].split(":")[0];
-  const port = parseInt(Deno.args[0].split(":")[1]) || undefined;
+if(import.meta.main){
+  const printUsage = () => {
+    console.log("Usage: bzfquery host[:port]");
+  };
 
-  console.log(JSON.stringify(await bzfquery(host, port), null, 2));
+  if(Deno.args.length === 1){
+    switch(Deno.args[0]){
+      case "help":
+      case "-h":
+      case "--help":
+        printUsage();
+        break;
+      default:{
+        const host = Deno.args[0].split(":")[0];
+        const port = parseInt(Deno.args[0].split(":")[1]) || undefined;
+
+        console.log(JSON.stringify(await bzfquery(host, port), null, 2));
+      } break;
+    }
+  }else{
+    printUsage();
+  }
 }
 
 export default bzfquery;
