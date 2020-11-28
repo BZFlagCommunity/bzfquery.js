@@ -118,7 +118,7 @@ const decodeOptions = (options: number): IGameOptions => {
  * @param host Server hostname/ip
  * @param port Server port
  * Example:
- * 
+ *
  *     bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
  */
 export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined> => {

@@ -1,4 +1,5 @@
 # bzfquery.js
+[![test](https://img.shields.io/badge/Deno-v1.5.4-blue)](https://github.com/denoland/deno/releases/tag/v1.5.4)
 
 JavaScript (TypeScript) version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library.
 
