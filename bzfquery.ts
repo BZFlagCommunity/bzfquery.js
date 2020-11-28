@@ -30,46 +30,148 @@ const PROTOCOL = "0221"; // bzfs protocol version
 export type GameStyle = "FFA" | "CTF" | "OFFA" | "Rabbit";
 export type TeamName = "Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter";
 
+/**
+ * Server query data
+ */
 export interface IBZFQuery{
+  /**
+   * @property Server game style
+   */
   style: GameStyle;
+  /**
+   * @property Configuration options
+   */
   options: IGameOptions;
+  /**
+   * @property Team info
+   */
   teams: ITeam[];
+  /**
+   * @property All players
+   */
   players: IPlayer[];
+  /**
+   * @property Maximum allowed player score
+   */
   maxPlayerScore: number;
+  /**
+   * @property Maximum allowed team score
+   */
   maxTeamScore: number;
+  /**
+   * @property Maximum number of players
+   */
   maxPlayers: number;
+  /**
+   * @property Number of shots
+   */
   maxShots: number;
+  /**
+   * @property Game time limit
+   */
   timeLimit: number;
+  /**
+   * @property Game time passed
+   */
   elapsedTime: number;
+  /**
+   * @property Automatically drop bad flags
+   */
   shake: false | {wins: number, timeout: number};
 }
 
+/**
+ * Game configuration options
+ */
 export interface IGameOptions{
   [key: string]: boolean;
+  /**
+   * @property Flags enabled
+   */
   flags: boolean;
+  /**
+   * @property Jumping enabled
+   */
   jumping: boolean;
+  /**
+   * @property Inertia enabled
+   */
   inertia: boolean;
+  /**
+   * @property Ricochet enabled (shots bounce off walls)
+   */
   ricochet: boolean;
+  /**
+   * @property Shaking bad flags enabled
+   */
   shaking: boolean;
+  /**
+   * @property Antidote flags enabled
+   */
   antidote: boolean;
+  /**
+   * @property Handicap enabled
+   */
   handicap: boolean;
+  /**
+   * @property Inability to shoot teammates
+   */
   noTeamKills: boolean;
 }
 
+/**
+ * Team information
+ */
 export interface ITeam{
+  /**
+   * @property Which team (color/name)
+   */
   name: TeamName;
+  /**
+   * @property Number of players
+   */
   players: number;
+  /**
+   * @property Maximum number of players
+   */
   maxPlayers: number;
+  /**
+   * @property Number of wins (points)
+   */
   wins?: number;
+  /**
+   * @property Number of losses (-points)
+   */
   losses?: number;
 }
 
+/**
+ * Player information
+ */
 export interface IPlayer{
+  /**
+   * @property Team the player is currently on
+   */
   team: TeamName;
+  /**
+   * @property Number of wins (points/kills)
+   */
   wins: number;
+  /**
+   * @property Number of losses (-points/deaths)
+   */
   losses: number;
+  /**
+   * @property Number of team kills
+   */
   tks: number;
+  /**
+   * @property Callsign (in-game name)
+   */
   callsign: string;
+  /**
+   * @property Motto (in-game text)
+   */
   motto: string;
 }
 
@@ -98,6 +200,10 @@ const messages = {
   addPlayer: 0x6170
 };
 
+/**
+ * Decodes options from network
+ * @param options Options from network
+ */
 const decodeOptions = (options: number): IGameOptions => {
   const _gameOptions = {} as IGameOptions;
 
@@ -115,11 +221,10 @@ const decodeOptions = (options: number): IGameOptions => {
 
 /**
  * Query the given game server
+ *
  * @param host Server hostname/ip
  * @param port Server port
- * Example:
- *
- *     bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
+ * @returns Data from server if found
  */
 export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined> => {
   let conn: Deno.Conn;
@@ -149,6 +254,10 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
     return;
   }
 
+  /**
+   * Get packet from network and perform basic decoding
+   * @returns Packet code and data
+   */
   const getPacket = async (): Promise<{code: string, buffer: Uint8Array}> => {
     let buffer = new Uint8Array(4);
     await conn.read(buffer);
@@ -159,6 +268,10 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
     return {code, buffer};
   };
 
+  /**
+   * Get response from the server
+   * @param expectedCode The code which is expected to be received
+   */
   const getResponse = async (expectedCode: number): Promise<Uint8Array> => {
     const timeLimit = new Date().getTime() + 5000;
     const codeStr = new TextDecoder("utf-8").decode(new Uint8Array([expectedCode >> 8, expectedCode & 0XFF]));
@@ -173,6 +286,10 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
     return new Uint8Array([]);
   };
 
+  /**
+   * Send command packet to the server
+   * @param command Command to execute
+   */
   const cmd = async (command: number): Promise<Uint8Array> => {
     const data = jspack.Pack(">2H", [0, command]);
     if(!data){
@@ -235,6 +352,8 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
     players.push({team: teamNames[team] as TeamName, wins, losses, tks, callsign: callsign.replace(/\x00/g, ""), motto: motto.replace(/\x00/g, "")});
   }
 
+  conn.close();
+
   const gameStyle = gameStyles[style] as GameStyle;
   const gameOptions = decodeOptions(options);
 
@@ -259,8 +378,6 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
     };
   }
 
-  conn.close();
-
   return info;
 };
 
@@ -268,7 +385,7 @@ if(import.meta.main && Deno.args.length === 1){
   const host = Deno.args[0].split(":")[0];
   const port = parseInt(Deno.args[0].split(":")[1]) || undefined;
 
-  bzfquery(host, port).then((data) => console.log(JSON.stringify(data, null, 2)));
+  console.log(JSON.stringify(await bzfquery(host, port), null, 2));
 }
 
 export default bzfquery;
