@@ -1,32 +1,36 @@
 # bzfquery.js
-[![test](https://img.shields.io/badge/Deno-v1.5.4-blue)](https://github.com/denoland/deno/releases/tag/v1.5.4)
 
-JavaScript (TypeScript) version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library.
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/The-Noah/bzfquery.js)
+[![GitHub license](https://img.shields.io/github/license/The-Noah/bzfquery.js)](LICENSE)
+[![Deno test](https://img.shields.io/badge/Deno-v1.5.4-blue)](https://github.com/denoland/deno/releases/tag/v1.5.4)
+
+JavaScript (TypeScript) version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library or from the command line.
 
 Usage: `deno run --allow-net bzfquery.ts host:port`
 
 Use in your code
 ```typescript
-import bzfquery from "https://deno.land/x/bzfquery.js/bzfquery.ts";
+import bzfquery from "https://deno.land/x/bzfquery/bzfquery.ts";
 
-bzfquery("localhost", 5154).then((data) => console.log(JSON.stringify(data, null, 2)));
+console.log(JSON.stringify(await bzfquery("bzflag.ns01.biZ", 5154), null, 2));
 ```
 
-Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery.js/bzfquery.ts host:port`
+Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery/bzfquery.ts host:port`
 
-More documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery.js/bzfquery.ts).
+More documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery/bzfquery.ts).
 
 # Types
 
 | Name       | Type |
 | ---------- | ---- |
+| `GameStyle` | `"FFA"` or `"CTF"` or `"OFFA"` or `"Rabbit"` |
 | `TeamName` | `"Rogue"` or `"Red"` or `"Green"` or `"Blue"` or `"Purple"` or `"Observer"` or `"Rabbit"` or `"Hunter"` |
 
 ## IBZFQuery
 
 | Property         | Type | Extra Info |
 | ---------------- | ---- | ---------- |
-| `style`          | `"FFA"` or `"CTF"` or `"OFFA"` or `"Rabbit"` |
+| `style`          | `GameStyle` |
 | `options`        | `IGameOptions` |
 | `teams`          | `ITeam[]` |
 | `players`        | `IPlayer[]` |
