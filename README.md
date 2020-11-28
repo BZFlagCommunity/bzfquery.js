@@ -4,7 +4,7 @@
 [![GitHub license](https://img.shields.io/github/license/The-Noah/bzfquery.js)](LICENSE)
 [![Deno test](https://img.shields.io/badge/Deno-v1.5.4-blue)](https://github.com/denoland/deno/releases/tag/v1.5.4)
 
-JavaScript (TypeScript) version of bzfquery. Requires [Deno](https://deno.land) to run. It can also be used as a library or from the command line.
+JavaScript (TypeScript) version of bzfquery with no external dependencies. Requires [Deno](https://deno.land) to run. It can also be used as a library or from the command line.
 
 Usage: `deno run --allow-net bzfquery.ts host:port`
 
