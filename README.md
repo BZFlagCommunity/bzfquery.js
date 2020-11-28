@@ -6,7 +6,7 @@
 
 JavaScript (TypeScript) version of bzfquery with no external dependencies. Requires [Deno](https://deno.land) to run. It can also be used as a library or from the command line.
 
-Usage: `deno run --allow-net bzfquery.ts host:port`
+Usage: `deno run --allow-net bzfquery.ts host[:port]`
 
 Use in your code
 ```typescript
@@ -15,7 +15,11 @@ import bzfquery from "https://deno.land/x/bzfquery/bzfquery.ts";
 console.log(JSON.stringify(await bzfquery("bzflag.ns01.biZ", 5154), null, 2));
 ```
 
-Use without downloading: `deno run --allow-net https://deno.land/x/bzfquery/bzfquery.ts host:port`
+Use without downloading project:
+```sh
+deno install --allow-net https://deno.land/x/bzfquery/bzfquery.ts
+bzfquery host[:port]
+```
 
 More documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery/bzfquery.ts).
 
