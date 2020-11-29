@@ -141,7 +141,7 @@ const messages = {
  * Decodes options from network
  * @param options Options from network
  */
-const decodeOptions = (options: number): IGameOptions => {
+function decodeOptions(options: number): IGameOptions{
   const _gameOptions = {} as IGameOptions;
 
   for(const option in gameOptions) {
@@ -163,7 +163,7 @@ const decodeOptions = (options: number): IGameOptions => {
  * @param port Server port
  * @returns Data from server if found
  */
-export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined> => {
+export async function bzfquery(host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined>{
   let conn: Deno.Conn;
   try{
     conn = await Deno.connect({
@@ -195,7 +195,7 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
    * Get packet from network and perform basic decoding
    * @returns Packet code and data
    */
-  const getPacket = async (): Promise<{code: string, buffer: Uint8Array}> => {
+  async function getPacket(): Promise<{code: string, buffer: Uint8Array}>{
     let buffer = new Uint8Array(4);
     await conn.read(buffer);
     const [size, code] = jspack.Unpack(">H2s", buffer);
@@ -209,7 +209,7 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
    * Get response from the server
    * @param expectedCode The code which is expected to be received
    */
-  const getResponse = async (expectedCode: number): Promise<Uint8Array> => {
+  async function getResponse(expectedCode: number): Promise<Uint8Array>{
     const timeLimit = new Date().getTime() + 5000;
     const codeStr = new TextDecoder("utf-8").decode(new Uint8Array([expectedCode >> 8, expectedCode & 0XFF]));
 
@@ -227,7 +227,7 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
    * Send command packet to the server
    * @param command Command to execute
    */
-  const cmd = async (command: number): Promise<Uint8Array> => {
+  async function cmd(command: number): Promise<Uint8Array>{
     const data = jspack.Pack(">2H", [0, command]);
     if(!data){
       return new Uint8Array();
@@ -319,7 +319,7 @@ export const bzfquery = async (host: string = "127.0.0.1", port: number = 5154):
 };
 
 if(import.meta.main){
-  const printUsage = () => {
+  function printUsage(){
     console.log("Usage: bzfquery host[:port]");
   };
 
@@ -327,7 +327,7 @@ if(import.meta.main){
    * Generate a string consisting of `count` spaces
    * @param count Number of spaces
    */
-  const createSpaces = (count: number): string => {
+  function createSpaces(count: number): string{
     let spaces = "";
     for(let i = 0; i < count; i++){
       spaces += " ";
@@ -341,7 +341,7 @@ if(import.meta.main){
    * @param label Label for boolean
    * @param value Boolean value
    */
-  const printBool = (label: string, value: boolean): void => {
+  function printBool(label: string, value: boolean): void{
     console.log(`${label}: ${value ? "yes" : "no"}`);
   };
 
