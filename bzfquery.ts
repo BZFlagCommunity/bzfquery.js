@@ -55,9 +55,9 @@ export interface IBZFQuery{
   /** Automatically drop bad flags */
   shake: false | {
     /** Number of wins (points) required */
-    wins: number,
+    wins: number;
     /** Time required to pass in deciseconds */
-    timeout: number
+    timeout: number;
   };
 }
 
