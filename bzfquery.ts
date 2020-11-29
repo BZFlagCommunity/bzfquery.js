@@ -30,148 +30,80 @@ const PROTOCOL = "0221"; // bzfs protocol version
 export type GameStyle = "FFA" | "CTF" | "OFFA" | "Rabbit";
 export type TeamName = "Rogue" | "Red" | "Green" | "Blue" | "Purple" | "Observer" | "Rabbit" | "Hunter";
 
-/**
- * Server query data
- */
+/** Server query data */
 export interface IBZFQuery{
-  /**
-   * @property Server game style
-   */
+  /** Server game style */
   style: GameStyle;
-  /**
-   * @property Configuration options
-   */
+  /** Configuration options */
   options: IGameOptions;
-  /**
-   * @property Team info
-   */
+  /** Team info */
   teams: ITeam[];
-  /**
-   * @property All players
-   */
+  /** All players */
   players: IPlayer[];
-  /**
-   * @property Maximum allowed player score
-   */
+  /** Maximum allowed player score */
   maxPlayerScore: number;
-  /**
-   * @property Maximum allowed team score
-   */
+  /** Maximum allowed team score */
   maxTeamScore: number;
-  /**
-   * @property Maximum number of players
-   */
+  /** Maximum number of players */
   maxPlayers: number;
-  /**
-   * @property Number of shots
-   */
+  /** Number of shots */
   maxShots: number;
-  /**
-   * @property Game time limit
-   */
+  /**  Game time limit */
   timeLimit: number;
-  /**
-   * @property Game time passed
-   */
+  /** Game time passed */
   elapsedTime: number;
-  /**
-   * @property Automatically drop bad flags
-   */
+  /** Automatically drop bad flags */
   shake: false | {wins: number, timeout: number};
 }
 
-/**
- * Game configuration options
- */
+/** Game configuration options */
 export interface IGameOptions{
   [key: string]: boolean;
-  /**
-   * @property Flags enabled
-   */
+  /** Flags enabled */
   flags: boolean;
-  /**
-   * @property Jumping enabled
-   */
+  /** Jumping enabled */
   jumping: boolean;
-  /**
-   * @property Inertia enabled
-   */
+  /** Inertia enabled */
   inertia: boolean;
-  /**
-   * @property Ricochet enabled (shots bounce off walls)
-   */
+  /** Ricochet enabled (shots bounce off walls) */
   ricochet: boolean;
-  /**
-   * @property Shaking bad flags enabled
-   */
+  /** Shaking bad flags enabled */
   shaking: boolean;
-  /**
-   * @property Antidote flags enabled
-   */
+  /** Antidote flags enabled */
   antidote: boolean;
-  /**
-   * @property Handicap enabled
-   */
+  /** Handicap enabled */
   handicap: boolean;
-  /**
-   * @property Inability to shoot teammates
-   */
+  /** Inability to shoot teammates */
   noTeamKills: boolean;
 }
 
-/**
- * Team information
- */
+/** Team information */
 export interface ITeam{
-  /**
-   * @property Which team (color/name)
-   */
+  /** Which team (color/name) */
   name: TeamName;
-  /**
-   * @property Number of players
-   */
+  /** Number of players */
   players: number;
-  /**
-   * @property Maximum number of players
-   */
+  /** Maximum number of players */
   maxPlayers: number;
-  /**
-   * @property Number of wins (points)
-   */
+  /** Number of wins (points) */
   wins?: number;
-  /**
-   * @property Number of losses (-points)
-   */
+  /** Number of losses (-points) */
   losses?: number;
 }
 
-/**
- * Player information
- */
+/** Player information */
 export interface IPlayer{
-  /**
-   * @property Team the player is currently on
-   */
+  /** Team the player is currently on */
   team: TeamName;
-  /**
-   * @property Number of wins (points/kills)
-   */
+  /** Number of wins (points/kills) */
   wins: number;
-  /**
-   * @property Number of losses (-points/deaths)
-   */
+  /** Number of losses (-points/deaths) */
   losses: number;
-  /**
-   * @property Number of team kills
-   */
+  /** @property Number of team kills */
   tks: number;
-  /**
-   * @property Callsign (in-game name)
-   */
+  /** Callsign (in-game name) */
   callsign: string;
-  /**
-   * @property Motto (in-game text)
-   */
+  /** Motto (in-game text) */
   motto: string;
 }
 
