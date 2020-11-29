@@ -12,7 +12,7 @@ Use in your code
 ```typescript
 import bzfquery from "https://deno.land/x/bzfquery/bzfquery.ts";
 
-console.log(JSON.stringify(await bzfquery("bzflag.ns01.biZ", 5154), null, 2));
+console.log(JSON.stringify(await bzfquery("bzflag.ns01.biz", 5154), null, 2));
 ```
 
 Use without downloading project:
