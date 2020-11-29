@@ -161,11 +161,11 @@ function decodeOptions(options: number): IGameOptions{
  *
  * @param host Server hostname/ip
  * @param port Server port
- * @returns Data from server if found
+ * @returns Data from server, or `undefined` if not found
  *
- *       import bzfquery from "https://deno.land/x/bzfquery/bzfquery.ts";
- *       const query = await bzfquery("bzflag.ns01.biz", 5154);
- *       console.log(JSON.stringify(query));
+ *     import bzfquery from "https://deno.land/x/bzfquery/bzfquery.ts";
+ *     const query = await bzfquery("bzflag.ns01.biz", 5154);
+ *     console.log(JSON.stringify(query));
  */
 export async function bzfquery(host: string = "127.0.0.1", port: number = 5154): Promise<IBZFQuery | undefined>{
   let conn: Deno.Conn;
