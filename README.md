@@ -1,8 +1,8 @@
 # bzfquery.js
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/The-Noah/bzfquery.js)
-[![GitHub license](https://img.shields.io/github/license/The-Noah/bzfquery.js)](LICENSE)
-[![Deno test](https://img.shields.io/badge/Deno-v1.5.4-blue)](https://github.com/denoland/deno/releases/tag/v1.5.4)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/The-Noah/bzfquery.js?style=for-the-badge&labelColor=black)](https://deno.land/x/bzfquery)
+[![GitHub license](https://img.shields.io/github/license/The-Noah/bzfquery.js?style=for-the-badge&labelColor=black)](LICENSE)
+[![Deno test](https://img.shields.io/badge/Deno-v1.5.4-blue?style=for-the-badge&labelColor=black&logo=deno&color=white)](https://github.com/denoland/deno/releases/tag/v1.5.4)
 
 JavaScript (TypeScript) version of bzfquery with no external dependencies. Requires [Deno](https://deno.land) to run. It can also be used as a library or from the command line.
 
