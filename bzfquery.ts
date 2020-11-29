@@ -386,6 +386,28 @@ if(import.meta.main){
     console.log("Usage: bzfquery host[:port]");
   };
 
+  /**
+   * Generate a string consisting of `count` spaces
+   * @param count Number of spaces
+   */
+  const createSpaces = (count: number): string => {
+    let spaces = "";
+    for(let i = 0; i < count; i++){
+      spaces += " ";
+    }
+
+    return spaces;
+  };
+
+  /**
+   * Output a boolean to the console in a nice way
+   * @param label Label for boolean
+   * @param value Boolean value
+   */
+  const printBool = (label: string, value: boolean): void => {
+    console.log(`${label}: ${value ? "yes" : "no"}`);
+  };
+
   if(Deno.args.length === 1){
     switch(Deno.args[0]){
       case "help":
@@ -393,11 +415,45 @@ if(import.meta.main){
       case "--help":
         printUsage();
         break;
-      default:{
+      default: {
         const host = Deno.args[0].split(":")[0];
         const port = parseInt(Deno.args[0].split(":")[1]) || undefined;
 
-        console.log(JSON.stringify(await bzfquery(host, port), null, 2));
+        const query = await bzfquery(host, port);
+        if(!query){
+          console.log("Server did not respond");
+          Deno.exit();
+        }
+
+        console.log(`Game Style: ${query.style}`);
+        printBool("Flags", query.options.flags);
+        printBool("Jumping", query.options.jumping);
+        printBool("Ricochet", query.options.ricochet);
+        printBool("Team Kills", !query.options.noTeamKills);
+
+        console.log("\nTeams:");
+        for(const team of query.teams.sort((a, b) => !a.wins || !a.losses || !b.wins || !b.losses || a.players === 0 || b.players === 0 ? 1 : (b.wins - b.losses) - (a.wins - a.losses))){
+          console.log(` • ${team.name}${createSpaces(10 - team.name.length)}[${(team.wins ?? 0) - (team.losses ?? 0)}]`)
+        }
+
+        // count spaces required for printing players
+        let maxPlayerCallsignLength = 0;
+        let maxPlayerScoreLength = 0;
+        for(const player of query.players){
+          if(player.callsign.length > maxPlayerCallsignLength){
+            maxPlayerCallsignLength = player.callsign.length;
+          }
+
+          const playerScoreLength = `${player.wins - player.losses}`.length;
+          if(playerScoreLength > maxPlayerScoreLength){
+            maxPlayerScoreLength = playerScoreLength;
+          }
+        }
+
+        console.log("\nPlayers:");
+        for(const player of query.players.sort((a, b) => a.team === "Observer" ? 1 : b.team === "Observer" ? -1 : (b.wins - b.losses) - (a.wins - a.losses))){
+          console.log(` • ${player.callsign}${createSpaces(maxPlayerCallsignLength + 2 - player.callsign.length)}[${player.wins - player.losses}]${createSpaces(maxPlayerScoreLength + 2 - `${player.wins - player.losses}`.length)}(${player.team})`)
+        }
       } break;
     }
   }else{
