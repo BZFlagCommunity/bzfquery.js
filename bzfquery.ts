@@ -154,7 +154,7 @@ function decodeOptions(options: number): IGameOptions{
   }
 
   return _gameOptions;
-};
+}
 
 /**
  * Query the given game server
@@ -207,7 +207,7 @@ export async function bzfquery(host: string = "127.0.0.1", port: number = 5154):
     await conn.read(buffer);
 
     return {code, buffer};
-  };
+  }
 
   /**
    * Get response from the server
@@ -225,7 +225,7 @@ export async function bzfquery(host: string = "127.0.0.1", port: number = 5154):
     }
 
     return new Uint8Array([]);
-  };
+  }
 
   /**
    * Send command packet to the server
@@ -240,7 +240,7 @@ export async function bzfquery(host: string = "127.0.0.1", port: number = 5154):
     await conn.write(new Uint8Array(data));
     const buffer = await getResponse(command);
     return buffer;
-  };
+  }
 
   buffer = await cmd(messages.queryGame);
   const [
@@ -320,12 +320,47 @@ export async function bzfquery(host: string = "127.0.0.1", port: number = 5154):
   }
 
   return info;
-};
+}
 
 if(import.meta.main){
+  const colors: {
+    [index: string]: string;
+  } = {
+    reset: "\x1b[0m",
+    bright: "\x1b[1m",
+    dim: "\x1b[2m",
+    underline: "\x1b[4m",
+    blink: "\x1b[5m",
+    reverse: "\x1b[7m",
+    hidden: "\x1b[8m",
+    fgBlack: "\x1b[30m",
+    fgRed: "\x1b[31m",
+    fgGreen: "\x1b[32m",
+    fgYellow: "\x1b[33m",
+    fgBlue: "\x1b[34m",
+    fgMagenta: "\x1b[35m",
+    fgCyan: "\x1b[36m",
+    fgWhite: "\x1b[37m",
+    BgBlack: "\x1b[40m",
+    bgRed: "\x1b[41m",
+    bgGreen: "\x1b[42m",
+    bgYellow: "\x1b[43m",
+    bgBlue: "\x1b[44m",
+    bgMagenta: "\x1b[45m",
+    bgCyan: "\x1b[46m",
+    bgWhite: "\x1b[47m"
+  };
+
+  // clear color highlighting when `NO_COLOR` is set
+  if(Deno.noColor){
+    for(const key in colors){
+      colors[key] = "";
+    }
+  }
+
   function printUsage(){
     console.log("Usage: bzfquery host[:port]");
-  };
+  }
 
   /**
    * Generate a string consisting of `count` spaces
@@ -338,16 +373,45 @@ if(import.meta.main){
     }
 
     return spaces;
-  };
+  }
 
   /**
-   * Output a boolean to the console in a nice way
-   * @param label Label for boolean
+   * Return a string containing the bool in a printable format
    * @param value Boolean value
    */
-  function printBool(label: string, value: boolean): void{
-    console.log(`${label}: ${value ? "yes" : "no"}`);
-  };
+  function boolToString(value: boolean): string{
+    return `${value ? `${colors.fgGreen}yes` : `${colors.fgRed}no`}${colors.reset}`;
+  }
+
+  function teamColorText(team: TeamName): string{
+    let color = "";
+
+    switch(team){
+      case "Rogue":
+        color = colors.fgYellow;
+        break;
+      case "Red":
+        color = colors.fgRed;
+        break;
+      case "Green":
+        color = colors.fgGreen;
+        break;
+      case "Blue":
+        color = colors.fgBlue;
+        break;
+      case "Purple":
+        color = colors.fgMagenta;
+        break;
+      case "Rabbit":
+      case "Observer":
+        color = colors.fgWhite;
+        break;
+      default:
+        return team;
+    }
+
+    return `${color}${team}${colors.reset}`;
+  }
 
   if(Deno.args.length === 1){
     switch(Deno.args[0]){
@@ -366,15 +430,21 @@ if(import.meta.main){
           Deno.exit();
         }
 
-        console.log(`Game Style: ${query.style}`);
-        printBool("Flags", query.options.flags);
-        printBool("Jumping", query.options.jumping);
-        printBool("Ricochet", query.options.ricochet);
-        printBool("Team Kills", !query.options.noTeamKills);
+        console.log(`\n${colors.bright}${colors.underline}Configuration${colors.reset}:`);
+        console.log(`Game style:  ${colors.bright}${query.style}${colors.reset}`);
+        console.log(`Flags:       ${boolToString(query.options.flags)}`);
+        console.log(`Jumping:     ${boolToString(query.options.jumping)}`);
+        console.log(`Ricochet:    ${boolToString(query.options.ricochet)}`);
+        console.log(`Team kills:  ${boolToString(!query.options.noTeamKills)}`);
 
-        console.log("\nTeams:");
-        for(const team of query.teams.sort((a, b) => !a.wins || !a.losses || !b.wins || !b.losses || a.players === 0 || b.players === 0 ? 1 : (b.wins - b.losses) - (a.wins - a.losses))){
-          console.log(` • ${team.name}${createSpaces(10 - team.name.length)}[${(team.wins ?? 0) - (team.losses ?? 0)}]`)
+        console.log(`\n${colors.bright}${colors.underline}Teams${colors.reset}:`);
+        for(const team of query.teams.sort((a, b) => !a.wins || !a.losses || a.players === 0 ? 1 : !b.wins || !b.losses || b.players === 0 ? -1 : (b.wins - b.losses) - (a.wins - a.losses))){
+          // set team score to 0 if there no players
+          if(team.players === 0){
+            team.wins = team.losses = 0;
+          }
+
+          console.log(` • ${teamColorText(team.name)}${createSpaces(10 - team.name.length)}[${colors.bright}${(team.wins ?? 0) - (team.losses ?? 0)}${colors.reset}]`)
         }
 
         // count spaces required for printing players
@@ -391,9 +461,13 @@ if(import.meta.main){
           }
         }
 
-        console.log("\nPlayers:");
-        for(const player of query.players.sort((a, b) => a.team === "Observer" ? 1 : b.team === "Observer" ? -1 : (b.wins - b.losses) - (a.wins - a.losses))){
-          console.log(` • ${player.callsign}${createSpaces(maxPlayerCallsignLength + 2 - player.callsign.length)}[${player.wins - player.losses}]${createSpaces(maxPlayerScoreLength + 2 - `${player.wins - player.losses}`.length)}(${player.team})`)
+        console.log(`\n${colors.bright}${colors.underline}Players${colors.reset}:`);
+        if(query.players.length > 0){
+          for(const player of query.players.sort((a, b) => a.team === "Observer" ? 1 : b.team === "Observer" ? -1 : (b.wins - b.losses) - (a.wins - a.losses))){
+            console.log(` • ${player.callsign}${createSpaces(maxPlayerCallsignLength + 2 - player.callsign.length)}[${colors.bright}${player.wins - player.losses}${colors.reset}]${createSpaces(maxPlayerScoreLength + 2 - `${player.wins - player.losses}`.length)}(${teamColorText(player.team)})`)
+          }
+        }else{
+          console.log(" No players online");
         }
       } break;
     }
