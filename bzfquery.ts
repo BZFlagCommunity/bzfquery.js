@@ -48,12 +48,17 @@ export interface IBZFQuery{
   maxPlayers: number;
   /** Number of shots */
   maxShots: number;
-  /**  Game time limit */
+  /** Game time limit in deciseconds */
   timeLimit: number;
-  /** Game time passed */
+  /** Game time passed in deciseconds */
   elapsedTime: number;
   /** Automatically drop bad flags */
-  shake: false | {wins: number, timeout: number};
+  shake: false | {
+    /** Number of wins (points) required */
+    wins: number,
+    /** Time required to pass in deciseconds */
+    timeout: number
+  };
 }
 
 /** Game configuration options */
