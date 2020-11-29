@@ -21,7 +21,7 @@ deno install --allow-net https://deno.land/x/bzfquery/bzfquery.ts
 bzfquery host[:port]
 ```
 
-More documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery/bzfquery.ts).
+Stable documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery/bzfquery.ts), and latest unstable docs [here](https://doc.deno.land/https/raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts).
 
 # Types
 
