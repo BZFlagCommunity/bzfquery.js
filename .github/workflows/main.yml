@@ -29,7 +29,7 @@ jobs:
         run: curl -fsSL https://deno.land/x/install/install.sh | sh
 
       - name: Bundle
-        run: deno bundle bzfquery.ts
+        run: /home/runner/.deno/bin/deno bundle bzfquery.ts
 
       - name: Compile
-        run: deno compile --unstable bzfquery.ts
+        run: /home/runner/.deno/bin/deno compile --unstable bzfquery.ts
