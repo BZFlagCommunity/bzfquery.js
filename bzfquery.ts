@@ -380,7 +380,11 @@ if(import.meta.main){
    * @param value Boolean value
    */
   function boolToString(value: boolean): string{
-    return `${value ? `${colors.fgGreen}yes` : `${colors.fgRed}no`}${colors.reset}`;
+    return `${colors.bright}${value ? `${colors.fgGreen}yes` : `${colors.fgRed}no`}${colors.reset}`;
+  }
+
+  function scoreColorText(object: ITeam | IPlayer): string{
+    return `${colors.bright}${colors.fgWhite}${(object.wins ?? 0) - (object.losses ?? 0)}${colors.reset}`;
   }
 
   function teamColorText(team: TeamName): string{
@@ -410,7 +414,7 @@ if(import.meta.main){
         return team;
     }
 
-    return `${color}${team}${colors.reset}`;
+    return `${colors.bright}${color}${team}${colors.reset}`;
   }
 
   if(Deno.args.length === 1){
@@ -430,21 +434,21 @@ if(import.meta.main){
           Deno.exit();
         }
 
-        console.log(`\n${colors.bright}${colors.underline}Configuration${colors.reset}:`);
-        console.log(`Game style:  ${colors.bright}${query.style}${colors.reset}`);
+        console.log(`${colors.bright}${colors.underline}${colors.fgWhite}Configuration${colors.reset}:`);
+        console.log(`Game style:  ${colors.bright}${colors.fgWhite}${query.style}${colors.reset}`);
         console.log(`Flags:       ${boolToString(query.options.flags)}`);
         console.log(`Jumping:     ${boolToString(query.options.jumping)}`);
         console.log(`Ricochet:    ${boolToString(query.options.ricochet)}`);
         console.log(`Team kills:  ${boolToString(!query.options.noTeamKills)}`);
 
-        console.log(`\n${colors.bright}${colors.underline}Teams${colors.reset}:`);
+        console.log(`\n${colors.bright}${colors.underline}${colors.fgWhite}Teams${colors.reset}:`);
         for(const team of query.teams.sort((a, b) => !a.wins || !a.losses || a.players === 0 ? 1 : !b.wins || !b.losses || b.players === 0 ? -1 : (b.wins - b.losses) - (a.wins - a.losses))){
           // set team score to 0 if there no players
           if(team.players === 0){
             team.wins = team.losses = 0;
           }
 
-          console.log(` • ${teamColorText(team.name)}${createSpaces(10 - team.name.length)}[${colors.bright}${(team.wins ?? 0) - (team.losses ?? 0)}${colors.reset}]`)
+          console.log(` • ${teamColorText(team.name)}${createSpaces(10 - team.name.length)}[${colors.bright}${scoreColorText(team)}${colors.reset}]`)
         }
 
         // count spaces required for printing players
@@ -461,10 +465,10 @@ if(import.meta.main){
           }
         }
 
-        console.log(`\n${colors.bright}${colors.underline}Players${colors.reset}:`);
+        console.log(`\n${colors.bright}${colors.underline}${colors.fgWhite}Players${colors.reset}:`);
         if(query.players.length > 0){
           for(const player of query.players.sort((a, b) => a.team === "Observer" ? 1 : b.team === "Observer" ? -1 : (b.wins - b.losses) - (a.wins - a.losses))){
-            console.log(` • ${player.callsign}${createSpaces(maxPlayerCallsignLength + 2 - player.callsign.length)}[${colors.bright}${player.wins - player.losses}${colors.reset}]${createSpaces(maxPlayerScoreLength + 2 - `${player.wins - player.losses}`.length)}(${teamColorText(player.team)})`)
+            console.log(` • ${player.callsign}${createSpaces(maxPlayerCallsignLength + 2 - player.callsign.length)}[${colors.bright}${scoreColorText(player)}${colors.reset}]${createSpaces(maxPlayerScoreLength + 2 - `${player.wins - player.losses}`.length)}(${teamColorText(player.team)})`)
           }
         }else{
           console.log(" No players online");
