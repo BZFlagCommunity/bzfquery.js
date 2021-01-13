@@ -1,9 +1,9 @@
 # bzfquery.js
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/The-Noah/bzfquery.js)](https://deno.land/x/bzfquery)
-[![GitHub license](https://img.shields.io/github/license/The-Noah/bzfquery.js)](LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/BZFlagCommunity/bzfquery.js)](https://deno.land/x/bzfquery)
+[![GitHub license](https://img.shields.io/github/license/BZFlagCommunity/bzfquery.js)](LICENSE)
 [![Deno test](https://img.shields.io/badge/Deno-v1.5.4-blue?logo=deno)](https://github.com/denoland/deno/releases/tag/v1.5.4)
-![CI](https://github.com/The-Noah/bzfquery.js/workflows/CI/badge.svg)
+![CI](https://github.com/BZFlagCommunity/bzfquery.js/workflows/CI/badge.svg)
 
 JavaScript (TypeScript) version of bzfquery with no external dependencies. Requires [Deno](https://deno.land) to run. It can also be used as a library or from the command line.
 
@@ -13,7 +13,7 @@ Use in your code
 ```typescript
 import bzfquery from "https://deno.land/x/bzfquery/bzfquery.ts";
 
-console.log(JSON.stringify(await bzfquery("bzflag.ns01.biz", 5154), null, 2));
+console.log(JSON.stringify(await bzfquery("bzflag.thenoah.dev", 5154), null, 2));
 ```
 
 Use without downloading project:
@@ -22,7 +22,7 @@ deno install --allow-net https://deno.land/x/bzfquery/bzfquery.ts
 bzfquery host[:port]
 ```
 
-Stable documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery/bzfquery.ts), and latest unstable docs [here](https://doc.deno.land/https/raw.githubusercontent.com/The-Noah/bzfquery.js/master/bzfquery.ts).
+Stable documentation can be found [here](https://doc.deno.land/https/deno.land/x/bzfquery/bzfquery.ts), and latest unstable docs [here](https://doc.deno.land/https/raw.githubusercontent.com/BZFlagCommunity/bzfquery.js/master/bzfquery.ts).
 
 # Types
 
